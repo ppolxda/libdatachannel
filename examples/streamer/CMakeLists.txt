@@ -9,6 +9,8 @@ set(STREAMER_SOURCES
 	dispatchqueue.hpp
 	h264fileparser.cpp
 	h264fileparser.hpp
+	mp4fileparser.cpp
+	mp4fileparser.hpp
 	helpers.cpp
 	helpers.hpp
 	opusfileparser.cpp
@@ -44,8 +46,13 @@ set_target_properties(streamer PROPERTIES
 set_target_properties(streamer PROPERTIES
 	XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER com.github.paullouisageneau.libdatachannel.examples.streamer)
 
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+
 find_package(Threads REQUIRED)
 target_link_libraries(streamer LibDataChannel::LibDataChannel Threads::Threads nlohmann_json::nlohmann_json)
+target_link_libraries(streamer ${OpenCV_LIBS})
+target_link_libraries(streamer avcodec avutil swscale)
 
 if(MSVC)
 	add_custom_command(TARGET streamer POST_BUILD
